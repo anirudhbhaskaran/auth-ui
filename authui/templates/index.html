@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="/static/css/main.css">
+        <script type="text/javascript" src="/static/js/jquery.js"></script>
+        <script type="text/javascript" src="/static/js/tailwind.js"></script>
+    </head>
+    <body>
+        <aside class="fixed top-0 left-0 h-screen min-w-48 bg-gray-900">
+            <div class="w-full p-2">
+                <ul class="m-2">
+                    <li class="text-center text-white bg-gray-600 rounded p-2">
+                        Dashboard
+                    </li>
+                </ul>
+            </div>
+        </aside>
+        <div class="w-full p-4 pl-52">
+            <div class="min-h-48 bg-gray-800 px-4 py-6 text-white rounded w-full">
+                <div class="grid grid-cols-12 gap-4 pb-4">
+                    <div class="col-span-3">
+                        <h1 class="">API Keys</h1>
+                    </div>
+                    <div class="col-span-7"></div>
+                    <div class="col-span-1 text-center">
+                        <button class="p-2 rounded bg-blue-600" type="button" onclick="(()=>window.location.reload())();">Refresh</button>
+                    </div>
+                    <div class="col-span-1 text-center">
+                        <button class="p-2 rounded bg-blue-600" type="button" onclick="createNewAuth();">+ Add</button>
+                    </div>
+                </div>
+                <hr>
+                <div class="w-full pt-4 overflow-auto">
+                    <table class="border-separate table-auto w-full rounded">
+                        <thead class="text-xs text-gray-700 uppercase bg-gray-500 rounded">
+                            <tr>
+                                <th class="p-4">Client ID</th>
+                                <th class="p-4">Client Key</th>
+                                <th class="p-4">Client Secret</th>
+                                <th class="p-4">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-xs bg-gray-600 border-b">
+                            {% if auth_list %}
+                                {% for each_auth in auth_list %}
+                                    <tr>
+                                        <td class="p-4 text-center">{{ each_auth[1] }}</td>
+                                        <td class="p-4 text-center">{{ each_auth[2] }}</td>
+                                        <td class="p-4 text-center">{{ each_auth[3] }}</td>
+                                        <td class="p-4 text-center">
+                                            <button class="bg-red-800 rounded p-2" type="button" onclick="deleteAuth('{{each_auth[1]}}')">Del</button>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            {% else %}
+                                <tr>
+                                    <td class="p-4 text-center">-</td>
+                                    <td class="p-4 text-center">-</td>
+                                    <td class="p-4 text-center">-</td>
+                                    <td class="p-4 text-center">-</td>
+                                </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <script type=text/javascript>
+            const createNewAuth = () => {
+                $.getJSON('/createNewAuth',
+                    function(data) {
+                    window.location.reload();
+                });
+            }
+            const deleteAuth = (c) => {
+                $.getJSON('/deleteAuth?clientId=' + c,
+                    function(data) {
+                    window.location.reload();
+                });
+            }
+        </script>
+    </body>
+</html>
